@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Game Website</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #333;
+            color: white;
+            overflow-y: auto;
+            transform: translateX(-250px);
+            transition: transform 0.3s ease;
+            padding-top: 20px;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: #fff;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #555;
+            cursor: pointer;
+        }
+
+        .container {
+            margin-left: 270px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .section {
+            display: none;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-section {
+            background-color: #000;
+            color: white;
+        }
+ 
+        .reviews-section, .comments-section {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .toggle-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .toggle-button:hover {
+            background-color: #0056b3;
+        }
+
+        .toggle-sidebar-btn {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .toggle-sidebar-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2>Games List</h2>
+        <ul>
+            <li onclick="navigateTo('game1.html')">Game 1</li>
+            <li onclick="navigateTo('game2.html')">Game 2</li>
+            <li onclick="navigateTo('game3.html')">Game 3</li>
+            <li onclick="navigateTo('game4.html')">Game 4</li>
+            <li onclick="navigateTo('game5.html')">Game 5</li>
+        </ul>
+    </div>
+
+    
+
+    <!-- Content Area -->
+    <div id="content" class="container">
+        <h1>Game Website Content</h1>
+        <p>Welcome to the game website. Here you will find information about the latest games.</p>
+
+        <!-- Buttons for each section -->
+        <div>
+            <button class="toggle-button" onclick="showSection('video-section')">Show Gameplay</button>
+            <button class="toggle-button" onclick="hideSection('video-section')">Hide Gameplay</button>
+        </div>
+        
+        <div>
+            <button class="toggle-button" onclick="showSection('reviews-section')">Show Reviews</button>
+            <button class="toggle-button" onclick="hideSection('reviews-section')">Hide Reviews</button>
+        </div>
+        
+        <div>
+            <button class="toggle-button" onclick="showSection('comments-section')">Show Comments</button>
+            <button class="toggle-button" onclick="hideSection('comments-section')">Hide Comments</button>
+        </div>
+
+        <!-- Gameplay Video Section -->
+        <div id="video-section" class="section video-section">
+            <h2>Gameplay Video</h2>
+            <video controls width="100%">
+                <source src="gameplay.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Reviews Section -->
+        <div id="reviews-section" class="section reviews-section">
+            <h2>Game Reviews</h2>
+            <div class="review">
+                <p>"This game offers an incredible open-world experience. The graphics are stunning, and the story is engaging from start to finish."</p>
+                <p class="author">- Gamer123</p>
+            </div>
+            <div class="review">
+                <p>"I loved the combat mechanics! Fast-paced action combined with strategic elements made every fight feel unique."</p>
+                <p class="author">- PlayerOne</p>
+            </div>
+            <div class="review">
+                <p>"A must-play for any fan of the genre. The multiplayer mode is a blast and offers endless hours of fun with friends."</p>
+                <p class="author">- CoolGamer89</p>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div id="comments-section" class="section comments-section">
+            <h2>Drop a Comment</h2>
+            <textarea id="commentText" placeholder="Write your comment here..." style="width: 100%; padding: 10px;"></textarea><br><br>
+            <input id="commentAuthor" type="text" placeholder="Your name" style="width: 100%; padding: 10px;"/><br><br>
+            <button onclick="submitComment()" class="toggle-button">Submit</button>
+            <div id="commentsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Toggle Sidebar Button -->
+    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">Toggle Sidebar</button>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var content = document.getElementById("content");
+            sidebar.classList.toggle("active");
+            content.classList.toggle("active");
+        }
+
+        function showSection(sectionId) {
+            var section = document.getElementById(sectionId);
+            section.style.display = "block";
+        }
+
+        function hideSection(sectionId) {
+            var section = document.getElementById(sectionId);
+            section.style.display = "none";
+        }
+
+        function submitComment() {
+            var commentText = document.getElementById("commentText").value;
+            var commentAuthor = document.getElementById("commentAuthor").value;
+
+            if (commentText && commentAuthor) {
+                var newComment = document.createElement("div");
+                newComment.classList.add("review");
+
+                var commentParagraph = document.createElement("p");
+                commentParagraph.textContent = '"' + commentText + '"';
+
+                var authorParagraph = document.createElement("p");
+                authorParagraph.textContent = "- " + commentAuthor;
+                authorParagraph.classList.add("author");
+
+                newComment.appendChild(commentParagraph);
+                newComment.appendChild(authorParagraph);
+
+                document.getElementById("commentsContainer").appendChild(newComment);
+
+                document.getElementById("commentText").value = "";
+                document.getElementById("commentAuthor").value = "";
+            } else {
+                alert("Please fill out both fields before submitting!");
+            }
+        }
+    </script>
+
+</body>
+</html>
